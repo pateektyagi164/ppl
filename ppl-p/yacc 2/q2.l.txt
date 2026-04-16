@@ -1,0 +1,27 @@
+%{
+#include "y.tab.h"
+#include <stdio.h>
+#include <stdlib.h>
+%}
+
+%%
+[0-9]+        { yylval.num = atoi(yytext); return NUMBER; }
+[a-zA-Z]      { yylval.id = yytext[0]; return ID; }
+
+[ \t]         {}
+\n            { return '\n'; }
+
+"+"           { return '+'; }
+"-"           { return '-'; }
+"*"           { return '*'; }
+"/"           { return '/'; }
+"^"           { return '^'; }
+
+"("           { return '('; }
+")"           { return ')'; }
+
+. { printf("Invalid character: %s\n", yytext);exit(1); }
+%%
+int yywrap(){
+return 1;
+}

@@ -1,0 +1,25 @@
+%{
+#include<stdio.h>
+
+%}
+%x comment
+
+%%
+"/*" {BEGIN(comment);}
+<comment>{
+"*/" {BEGIN(INITIAL);}
+[^\n] ;
+\n ;
+}
+"//"[^\n]*
+[^\n] {ECHO;}
+\n {ECHO;}
+
+%%
+int yywrap(){
+return 1;
+}
+int main(){
+yylex();
+return 0;
+}

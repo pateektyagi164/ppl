@@ -1,0 +1,41 @@
+%{
+#include<stdio.h>
+int literals=0;
+char buffer[1000];
+int i=0;
+%}
+%x string
+%%
+\"  {i=0;BEGIN(string);}
+<string>{
+\\\n {int j=0;
+            while(yytext[j]){
+              buffer[i++]=yytext[j++];
+              };
+                    }
+
+\\.       {int j=0;
+            while(yytext[j]){
+              buffer[i++]=yytext[j++];
+              };
+                    }
+
+[^\\\"\n]+ {int j=0;
+            while(yytext[j]){
+              buffer[i++]=yytext[j++];
+              };
+                    }
+\" {buffer[i]='\0';printf("\nstring :\"%s\"\n",buffer);literals++;BEGIN(INITIAL);}
+\n {BEGIN(INITIAL);}
+}
+.|\n {}
+%%
+
+int yywrap(){
+return 1;
+}
+int main(){
+yylex();
+printf("no of string literals: %d",literals);
+return 0;
+}

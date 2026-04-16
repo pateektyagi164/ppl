@@ -1,0 +1,53 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+
+void yyerror(const char *s);
+int yylex();
+%}
+
+%union {
+    int ival;
+}
+
+%token <ival> BOOL
+%token AND OR NOT NEWLINE
+
+%type <ival> expr
+
+%left OR
+%left AND
+%right NOT
+
+%%
+
+program:
+      program line
+    | /* empty */
+    ;
+
+line:
+      expr NEWLINE    { printf("Result: %s\n", $1 ? "true" : "false"); }
+    | NEWLINE
+    ;
+
+expr:
+      BOOL                  { $$ = $1; }
+    | expr AND expr         { $$ = $1 && $3; }
+    | expr OR  expr         { $$ = $1 || $3; }
+    | NOT expr              { $$ = !$2; }
+    | '(' expr ')'          { $$ = $2; }
+    ;
+
+%%
+
+void yyerror(const char *s) {
+    fprintf(stderr, "Error: %s\n", s);
+}
+
+int main() {
+    printf("Boolean Expression Parser\n");
+    printf("Use: true, false, and, or, not, ( )\n\n");
+    yyparse();
+    return 0;
+}

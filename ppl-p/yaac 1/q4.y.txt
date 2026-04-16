@@ -1,0 +1,30 @@
+%{
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+void yyerror(const char *s);
+int yylex();
+%}
+%token IF ELSE NUMBER ID GT LT EQQ EQ LTE GTE 
+%left '+' '-'
+%left '*' '/'
+%right UMINUS
+%%
+program: IF_st| program IF_st  {printf("PARSED SUCCESFULLY");};
+IF_st: IF'(' condition ')' '{' statement_st '}'| IF '(' condition ')' '{' statement_st '}' ELSE '{' statement_st '}';
+statement_st: statement|statement_st statement;
+statement: IF '(' condition ')' '{' statement_st '}'|
+          IF '(' condition ')' '{' statement_st '}' ELSE '{' statement_st '}'|
+          ID EQ exp ';';
+exp: NUMBER | exp '-' exp | exp '+' exp | exp '*' exp | exp '/' exp | '-' exp %prec UMINUS|ID;
+
+condition: exp GT exp| exp LT exp | exp EQQ exp | exp LTE exp | exp GTE exp;
+%%
+void yyerror(const char *s){
+printf("\n error :%s",s);
+}
+int main(){
+printf("enter the while loop conditions\n");
+yyparse();
+return 0;
+}

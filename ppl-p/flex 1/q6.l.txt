@@ -1,0 +1,14 @@
+%{
+#include<stdio.h>
+%}
+%%
+[a-zA-Z0-9._%+-]+@[a-zA-Z0-9-]+(\.[a-zA-Z-]{2,})*\.[a-zA-Z]{2,}  {printf("Email: %s is valid \n",yytext);}
+[^\n]+ {printf("Email %s is invalid\n",yytext);}
+%%
+int yywrap(){
+return 1;
+}
+int main(){
+yylex();
+return 0;
+}

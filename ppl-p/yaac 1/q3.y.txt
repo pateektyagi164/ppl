@@ -1,0 +1,23 @@
+%{
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+int yylex();
+void yyerror(const char *s);
+extern char buffer[];
+
+%}
+%token NEWLINE valid invalid;
+%%
+input : |input line;
+line : valid NEWLINE {printf("the given input %s is valid \n",buffer);};
+%%
+void yyerror(const char *s){
+printf("error : %s",s);
+}
+int main(){
+printf("enter the expression \n");
+yyparse();
+return 0;
+}
+

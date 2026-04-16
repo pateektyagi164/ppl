@@ -1,0 +1,21 @@
+%{
+#include<stdio.h>
+%}
+
+%%
+"printf"|"if"|"else if"|"else"|"return"|"for"|"while"|"void"|"int"|"float" {printf("keyword : %s\n",yytext);}
+[a-zA-Z_][a-zA-Z0-9_]* {printf("identifier : %s\n",yytext);}
+[0-9]+(\.[0-9]+)? {printf("number :%s\n",yytext);}
+[=\-+*\<>!]+ {printf("operators :%s\n",yytext);}
+[ \t\n]+
+. {printf("unexpected character %s appears \n",yytext);}
+
+%%
+int yywrap(){
+return 1;
+}
+int main(){
+yylex();
+return 0;
+}
+

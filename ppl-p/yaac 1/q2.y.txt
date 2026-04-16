@@ -1,0 +1,34 @@
+%{
+#include<stdio.h>
+#include<stdlib.h>
+#include<stdbool.h>
+void yyerror(const char *s);
+int yylex();
+%}
+
+%token NUMBER
+%token NEWLINE
+%type  expr
+%left '+' '-'
+%left '*' '/'
+%right UMINUS
+
+%%
+input: |input line {printf("\n valid arithmetic expression");};
+line: expr NEWLINE ;
+expr: expr '+' expr 
+     |expr '-' expr 
+     |expr '/'expr 
+     |expr '*'expr 
+     |'(' expr ')' 
+     | NUMBER 
+     |'-'expr %prec UMINUS ;
+%%
+void yyerror(const char *s){
+   printf("invalid arithmetic expression %s:",s);
+}
+int main(){
+printf("enter the expression \n");
+yyparse();
+return 0;
+}
