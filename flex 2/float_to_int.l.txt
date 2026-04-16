@@ -1,0 +1,73 @@
+%{
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* Function prototype to convert an integer to binary */
+void convert_to_binary(int n);
+%}
+
+/* Regular definitions */
+DIGIT    [0-9]
+FLOAT    {DIGIT}+\.{DIGIT}+
+
+%%
+
+{FLOAT} {
+    /* 1. Find the decimal point position */
+    char *dot_ptr = strchr(yytext, '.');
+    
+    /* 2. Calculate the length of the integer part */
+    int int_len = dot_ptr - yytext;
+    
+    /* 3. Extract the integer part into a separate string */
+    char int_part_str[256];
+    strncpy(int_part_str, yytext, int_len);
+    int_part_str[int_len] = '\0'; /* Null-terminate the string */
+    
+    /* 4. Convert the string to an integer */
+    int num = atoi(int_part_str);
+    
+    /* 5. Print the results */
+    printf("Found floating-point number: %s\n", yytext);
+    printf("Integer part (%d) in binary: ", num);
+    convert_to_binary(num);
+    printf("\n\n");
+}
+
+.|\n    { /* Ignore all other characters and newlines */ }
+
+%%
+
+/* Subroutine to convert and print integer as binary */
+void convert_to_binary(int n) {
+    if (n == 0) {
+        printf("0");
+        return;
+    }
+    
+    int binary_arr[32];
+    int i = 0;
+    
+    while (n > 0) {
+        binary_arr[i] = n % 2;
+        n = n / 2;
+        i++;
+    }
+    
+    /* Print array in reverse order */
+    for (int j = i - 1; j >= 0; j--) {
+        printf("%d", binary_arr[j]);
+    }
+}
+
+/* Required by Lex */
+int yywrap() {
+    return 1;
+}
+
+int main() {
+    printf("Enter text containing floating-point numbers (Press Ctrl+D to exit):\n");
+    yylex();
+    return 0;
+}

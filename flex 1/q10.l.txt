@@ -1,0 +1,16 @@
+%{
+#include<stdio.h>
+
+%}
+%%
+[0-9]{1,3}(\.[0-9]{1,3}){3} {printf("The ip address : %s is valid\n",yytext);}
+[^\n]+ {printf("The ip address : %s is invalid\n",yytext);}
+%%
+
+int yywrap(){
+return 1;
+}
+int main(){
+yylex();
+return 0;
+}

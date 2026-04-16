@@ -1,0 +1,20 @@
+%{
+#include "y.tab.h"
+%}
+
+%%
+
+"true"          { yylval.ival = 1; return BOOL; }
+"false"         { yylval.ival = 0; return BOOL; }
+"and"           { return AND; }
+"or"            { return OR; }
+"not"           { return NOT; }
+"("             { return '('; }
+")"             { return ')'; }
+[ \t]           ;
+\n              { return NEWLINE; }
+.               { printf("Unknown char: %s\n", yytext); }
+
+%%
+
+int yywrap() { return 1; }
